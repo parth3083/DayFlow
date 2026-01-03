@@ -16,17 +16,19 @@ export interface ApiResponse<T = any> {
 export interface User {
   _id: string;
   loginId: string;
-  companyName: string;
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
-  phoneNumber?: string;
-  imageUrl?: string;
   role: 'employee' | 'hr' | 'admin';
+  companyName: string;
+  phoneNumber: string;
+  department: string;
+  position: string;
+  joiningYear: number;
+  serialNumber: number;
+  imageUrl?: string;
   isActive: boolean;
   passwordChangeRequired: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 // Login credentials

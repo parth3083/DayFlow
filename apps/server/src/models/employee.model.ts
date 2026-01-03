@@ -11,6 +11,8 @@ export interface IEmployee extends Document {
   lastName: string;
   email: string;
   phoneNumber: string;
+  department: string;
+  position: string;
   imageUrl?: string;
   password: string;
   loginId: string;
@@ -68,6 +70,16 @@ const employeeSchema = new Schema<IEmployee, IEmployeeModel>(
     phoneNumber: {
       type: String,
       required: [true, "Phone number is required"],
+      trim: true,
+    },
+    department: {
+      type: String,
+      // required: [true, "Department is required"],
+      trim: true,
+    },
+    position: {
+      type: String,
+      // required: [true, "Position is required"],
       trim: true,
     },
     imageUrl: {

@@ -46,6 +46,16 @@ export const createEmployeeSchema = z.object({
     .max(15, "Phone number must not exceed 15 digits")
     .regex(/^[+]?[\d\s-]+$/, "Please provide a valid phone number"),
 
+  department: z
+    .string("Department is required")
+    .min(2, "Department must be at least 2 characters")
+    .trim(),
+
+  position: z
+    .string("Position is required")
+    .min(2, "Position must be at least 2 characters")
+    .trim(),
+
   role: z
     .nativeEnum(EmployeeRole, {
       message: "Role must be one of: employee, hr, admin",
@@ -130,6 +140,18 @@ export const updateEmployeeSchema = z.object({
     .min(10, "Phone number must be at least 10 digits")
     .max(15, "Phone number must not exceed 15 digits")
     .regex(/^[+]?[\d\s-]+$/, "Please provide a valid phone number")
+    .optional(),
+
+  department: z
+    .string("Department must be a string")
+    .min(2, "Department must be at least 2 characters")
+    .trim()
+    .optional(),
+
+  position: z
+    .string("Position must be a string")
+    .min(2, "Position must be at least 2 characters")
+    .trim()
     .optional(),
 });
 

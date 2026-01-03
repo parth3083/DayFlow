@@ -24,16 +24,36 @@ import {
 } from "lucide-react";
 import EditEmployeeDialog from "@/components/shared/edit-employee-dialog";
 
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { fetchUserProfile } from "@/redux/slices/authSlice";
+import { updateEmployeeInfo } from "@/redux/slices/employeeSlice";
+import { useEffect } from "react";
+
 export default function ProfileContent() {
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector((state) => state.auth);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [isEditingPrivate, setIsEditingPrivate] = useState(false);
     const [isEditingResume, setIsEditingResume] = useState(false);
-    const [employeeData, setEmployeeData] = useState({
-        name: "Michael Chen",
-        email: "employee@dayflow.com",
-        phone: "+1 (555) 987-6543",
-        address: "456 Tech Street, San Francisco, CA 94102",
-    });
+
+    useEffect(() => {
+        if (!user) {
+            dispatch(fetchUserProfile());
+        }
+    }, [dispatch, user]);
+
+    const handleSave = (data: any) => {
+        dispatch(fetchUserProfile());
+        console.log("Updated profile:", data);
+    };
+
+    if (!user) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600"></div>
+            </div>
+        );
+    }
 
     // Mock salary data
     const salaryData = {
@@ -62,10 +82,6 @@ export default function ProfileContent() {
         certifications: ["AWS Certified Developer", "React Professional Certification"],
     });
 
-    const handleSave = (data: any) => {
-        setEmployeeData(data);
-        console.log("Updated profile:", data);
-    };
 
     return (
         <div className="w-[100%]">
@@ -80,10 +96,13 @@ export default function ProfileContent() {
                     <div className="flex items-start gap-8">
                         <div className="relative mr-16">
                             <Avatar className="w-32 h-32">
-                                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael" />
-                                <AvatarFallback className="text-3xl">MC</AvatarFallback>
+                                <AvatarImage src={user.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.firstName}`} />
+                                <AvatarFallback className="text-3xl">{user.firstName.charAt(0)}{user.lastName.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <button className="absolute bottom-0 right-0 w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center text-white hover:bg-teal-700">
+                            <button
+                                onClick={() => setDialogOpen(true)}
+                                className="absolute bottom-0 right-0 w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center text-white hover:bg-teal-700"
+                            >
                                 <Edit size={18} />
                             </button>
                         </div>
@@ -93,19 +112,19 @@ export default function ProfileContent() {
                             <div className="space-y-4">
                                 <div>
                                     <Label className="text-sm text-gray-500">My Name</Label>
-                                    <p className="font-medium text-gray-900 mt-1">Michael Chen</p>
+                                    <p className="font-medium text-gray-900 mt-1">{user.firstName} {user.lastName}</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm text-gray-500">Job Position</Label>
-                                    <p className="font-medium text-gray-900 mt-1">Software Developer</p>
+                                    <p className="font-medium text-gray-900 mt-1">{user.position}</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm text-gray-500">Email</Label>
-                                    <p className="font-medium text-gray-900 mt-1">{employeeData.email}</p>
+                                    <p className="font-medium text-gray-900 mt-1">{user.email}</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm text-gray-500">Mobile</Label>
-                                    <p className="font-medium text-gray-900 mt-1">{employeeData.phone}</p>
+                                    <p className="font-medium text-gray-900 mt-1">{user.phoneNumber}</p>
                                 </div>
                             </div>
 
@@ -113,19 +132,19 @@ export default function ProfileContent() {
                             <div className="space-y-4">
                                 <div>
                                     <Label className="text-sm text-gray-500">Company</Label>
-                                    <p className="font-medium text-gray-900 mt-1">DayFlow Technologies</p>
+                                    <p className="font-medium text-gray-900 mt-1">{user.companyName}</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm text-gray-500">Department</Label>
-                                    <p className="font-medium text-gray-900 mt-1">Engineering</p>
+                                    <p className="font-medium text-gray-900 mt-1">{user.department}</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm text-gray-500">Manager</Label>
-                                    <p className="font-medium text-gray-900 mt-1">Sarah Johnson</p>
+                                    <p className="font-medium text-gray-900 mt-1">N/A</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm text-gray-500">Location</Label>
-                                    <p className="font-medium text-gray-900 mt-1">San Francisco, CA</p>
+                                    <p className="font-medium text-gray-900 mt-1">Remote</p>
                                 </div>
                             </div>
                         </div>
@@ -318,7 +337,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="address">Residing Address</Label>
                                         <Input
                                             id="address"
-                                            defaultValue={employeeData.address}
+                                            defaultValue="N/A"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -327,7 +346,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="nationality">Nationality</Label>
                                         <Input
                                             id="nationality"
-                                            defaultValue="American"
+                                            defaultValue="Indian"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -337,7 +356,7 @@ export default function ProfileContent() {
                                         <Input
                                             id="personalEmail"
                                             type="email"
-                                            defaultValue="michael.personal@gmail.com"
+                                            defaultValue={user.email}
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -365,7 +384,7 @@ export default function ProfileContent() {
                                         <Input
                                             id="joiningDate"
                                             type="date"
-                                            defaultValue="2023-03-20"
+                                            defaultValue={`${user.joiningYear}-01-01`}
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -379,7 +398,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="accountNumber">Account Number</Label>
                                         <Input
                                             id="accountNumber"
-                                            defaultValue="1234567890"
+                                            defaultValue="XXXXXXXXXXXX"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -388,7 +407,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="bankName">Bank Name</Label>
                                         <Input
                                             id="bankName"
-                                            defaultValue="Chase Bank"
+                                            defaultValue="HDFC Bank"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -397,7 +416,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="ifsc">IFSC Code</Label>
                                         <Input
                                             id="ifsc"
-                                            defaultValue="CHAS0001234"
+                                            defaultValue="HDFC0001234"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -406,7 +425,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="pan">PAN No</Label>
                                         <Input
                                             id="pan"
-                                            defaultValue="ABCDE1234F"
+                                            defaultValue="XXXXXXXXXX"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -415,7 +434,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="uan">UAN NO</Label>
                                         <Input
                                             id="uan"
-                                            defaultValue="123456789012"
+                                            defaultValue="XXXXXXXXXXXX"
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -424,7 +443,7 @@ export default function ProfileContent() {
                                         <Label htmlFor="empCode">Emp Code</Label>
                                         <Input
                                             id="empCode"
-                                            defaultValue="EMP002"
+                                            defaultValue={user.loginId}
                                             className="mt-2"
                                             disabled={!isEditingPrivate}
                                         />
@@ -595,7 +614,7 @@ export default function ProfileContent() {
             <EditEmployeeDialog
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
-                employee={employeeData}
+                employee={user}
                 onSave={handleSave}
                 isAdmin={false}
             />
