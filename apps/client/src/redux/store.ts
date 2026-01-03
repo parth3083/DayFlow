@@ -1,10 +1,15 @@
-import { configureStore} from "@reduxjs/toolkit"
-// import searchReducer from "@/redux/slices/searchSlice"
+import { configureStore, createSlice } from "@reduxjs/toolkit"
+
+// Dummy slice to prevent empty reducer error
+const dummySlice = createSlice({
+  name: 'dummy',
+  initialState: {},
+  reducers: {},
+});
 
 export const store = configureStore({
   reducer: {
-    // search: searchReducer,
-
+    dummy: dummySlice.reducer,
   },
 })
 
