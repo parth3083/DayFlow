@@ -1,0 +1,27 @@
+meta {
+  name: Update the leave status
+  type: http
+  seq: 17
+}
+
+patch {
+  url: {{Server}}/api/leaves/6958c7541be32d819f34577b/status
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDI2MTUyLCJleHAiOjE3Njc0MjcwNTJ9.z0ApEGtH0N0CYFNHmrXd_2hKrv1MYdnB1YwzJYyFKs8
+}
+
+body:json {
+  {
+    "status": "approved",
+    "adminComments": "Enjoy your time off!"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

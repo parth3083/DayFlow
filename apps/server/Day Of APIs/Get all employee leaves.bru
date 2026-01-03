@@ -1,0 +1,25 @@
+meta {
+  name: Get all employee leaves
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{Server}}/api/leaves/my-leaves?page=1&limit=10
+  body: json
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 10
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZGVwdEBleGFtcGxlLmNvbSIsImxvZ2luSWQiOiJHSk9ERTIwMjYwMyIsInJvbGUiOiJociIsImlhdCI6MTc2NzQyNTQ3MiwiZXhwIjoxNzY3NDI2MzcyfQ.hTqCQB4CAw_Qi3boXkud0z_eqvSFgeE6mClhre09xqA
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

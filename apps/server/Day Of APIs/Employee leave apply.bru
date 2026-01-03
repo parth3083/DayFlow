@@ -1,0 +1,30 @@
+meta {
+  name: Employee leave apply
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{Server}}/api/leaves/apply
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZGVwdEBleGFtcGxlLmNvbSIsImxvZ2luSWQiOiJHSk9ERTIwMjYwMyIsInJvbGUiOiJociIsImlhdCI6MTc2NzQyNTQ3MiwiZXhwIjoxNzY3NDI2MzcyfQ.hTqCQB4CAw_Qi3boXkud0z_eqvSFgeE6mClhre09xqA
+}
+
+body:json {
+  {
+    "leaveType": "paid",
+    "startDate": "2026-05-15",
+    "endDate": "2026-05-17",
+    "remarks": "Attending family function",
+    "attachment": "https://example.com/certificate.pdf"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,8 +1,9 @@
-import type{Router} from "express"
-import express from "express"
+import type { Router } from "express";
+import express from "express";
 import employeeRoutes from "./employee.routes.js";
+import leaveRoutes from "./leave.routes.js";
 
-const router:Router = express.Router();
+const router: Router = express.Router();
 
 /**
  * API Routes
@@ -11,6 +12,9 @@ const router:Router = express.Router();
 
 // Employee routes
 router.use("/employees", employeeRoutes);
+
+// Leave & Time-off routes
+router.use("/leaves", leaveRoutes);
 
 // Health check route
 router.get("/health", (req, res) => {

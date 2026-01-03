@@ -1,0 +1,26 @@
+meta {
+  name: Admin side get all leaves
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{Server}}/api/leaves?status=pending&page=1&limit=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  status: pending
+  page: 1
+  limit: 10
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDI2MTUyLCJleHAiOjE3Njc0MjcwNTJ9.z0ApEGtH0N0CYFNHmrXd_2hKrv1MYdnB1YwzJYyFKs8
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

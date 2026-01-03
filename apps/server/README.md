@@ -23,6 +23,7 @@ A robust, secure, and scalable employee authentication and management system bui
 - ✅ **Zod Validation** - Comprehensive request validation
 - ✅ **Password Management** - Force password change on first login, password reset by HR/Admin
 - ✅ **Employee Management** - CRUD operations with role-based permissions
+- ✅ **Leave & Time-Off Management** - Apply, view, and approve leave requests
 - ✅ **Rate Limiting** - Protection against brute force attacks
 
 ## 🛠 Technology Stack
@@ -330,6 +331,62 @@ PATCH /api/employees/:id/role
 ```json
 {
   "role": "hr"  // "employee" | "hr" | "admin"
+}
+```
+
+---
+
+### 📅 Leave & Time-Off Routes (Require Bearer Token)
+
+#### Apply for Leave
+```http
+POST /api/leaves/apply
+```
+
+**Request Body:**
+```json
+{
+  "leaveType": "paid",  // "paid" | "sick" | "unpaid"
+  "startDate": "2026-05-14",
+  "endDate": "2026-05-14",
+  "remarks": "Attending family function",
+  "attachment": "https://example.com/certificate.pdf" // Optional, for sick leave
+}
+```
+
+#### Get My Leaves
+```http
+GET /api/leaves/my-leaves?page=1&limit=10
+```
+
+#### Get All Leaves (HR & Admin)
+```http
+GET /api/leaves?status=pending&page=1&limit=10
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page | number | Page number (default: 1) |
+| limit | number | Items per page (default: 10) |
+| status | string | Filter by status (pending, approved, rejected) |
+| employeeId | string | Filter by employee MongoDB ID |
+
+#### Get Leave Details
+```http
+GET /api/leaves/:id
+```
+
+#### Update Leave Status (HR & Admin)
+```http
+PATCH /api/leaves/:id/status
+```
+
+**Request Body:**
+```json
+{
+  "status": "approved",  // "approved" | "rejected"
+  "adminComments": "Enjoy your time off!"
 }
 ```
 
