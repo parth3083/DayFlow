@@ -483,3 +483,8 @@ curl -X POST http://localhost:8000/api/employees \
 ---
 
 **Built with ❤️ for DayFlow**
+
+## Admin Credentials
+Email:      admin@dayflow.com
+Login ID:   DSUAD202601
+Password:   AdminPassword@123
