@@ -1,29 +1,17 @@
 meta {
-  name: Create employee
+  name: Deactivate user
   type: http
-  seq: 1
+  seq: 11
 }
 
-post {
-  url: {{Server}}/api/employees
-  body: json
+patch {
+  url: {{Server}}/api/employees/DSUAD202601/deactivate
+  body: none
   auth: inherit
 }
 
 headers {
   Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDIyNzU3LCJleHAiOjE3Njc0MjM2NTd9.oa_eJT1bbxZ-8Ee-icw7w28T0-xgBCd9vmlLnku9e7M
-}
-
-body:json {
-  {
-    "companyName": "Google",
-    "firstName": "Johnny",
-    "lastName": "Dept",
-    "email": "john.dept@example.com",
-    "phoneNumber": "+1234567890",
-    "imageUrl": "https://example.com/photo.jpg",
-    "role": "employee"
-  }
 }
 
 settings {

@@ -1,0 +1,20 @@
+meta {
+  name: Get Profile
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{Server}}/api/employees/me
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDIxNjY2LCJleHAiOjE3Njc0MjI1NjZ9.JLZh1ogg7MZQ1izKVdHLe3StGP_QvENzv-FvxGNpi3Y
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

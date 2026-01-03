@@ -15,7 +15,7 @@ import {
   updateRoleSchema,
 } from "../validations/employee.validation.js";
 
-const router:Router = Router();
+const router: Router = Router();
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -118,48 +118,48 @@ router.get(
 );
 
 /**
- * @route   GET /api/employees/:id
- * @desc    Get employee by ID
+ * @route   GET /api/employees/:loginId
+ * @desc    Get employee by login ID
  * @access  HR, Admin
  */
 router.get(
-  "/:id",
+  "/:loginId",
   authenticate,
   hrOrAdminOnly,
   EmployeeController.getEmployeeById
 );
 
 /**
- * @route   PATCH /api/employees/:id/deactivate
+ * @route   PATCH /api/employees/:loginId/deactivate
  * @desc    Deactivate employee
  * @access  HR, Admin
  */
 router.patch(
-  "/:id/deactivate",
+  "/:loginId/deactivate",
   authenticate,
   hrOrAdminOnly,
   EmployeeController.deactivateEmployee
 );
 
 /**
- * @route   PATCH /api/employees/:id/activate
+ * @route   PATCH /api/employees/:loginId/activate
  * @desc    Activate employee
  * @access  HR, Admin
  */
 router.patch(
-  "/:id/activate",
+  "/:loginId/activate",
   authenticate,
   hrOrAdminOnly,
   EmployeeController.activateEmployee
 );
 
 /**
- * @route   POST /api/employees/:id/reset-password
+ * @route   POST /api/employees/:loginId/reset-password
  * @desc    Reset employee password
  * @access  HR, Admin
  */
 router.post(
-  "/:id/reset-password",
+  "/:loginId/reset-password",
   authenticate,
   hrOrAdminOnly,
   EmployeeController.resetPassword
@@ -168,12 +168,12 @@ router.post(
 // ==================== ADMIN ONLY ROUTES ====================
 
 /**
- * @route   PATCH /api/employees/:id/role
+ * @route   PATCH /api/employees/:loginId/role
  * @desc    Update employee role
  * @access  Admin only
  */
 router.patch(
-  "/:id/role",
+  "/:loginId/role",
   authenticate,
   adminOnly,
   EmployeeController.updateRole

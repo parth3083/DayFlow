@@ -1,0 +1,23 @@
+meta {
+  name: Login with login ID
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{Server}}/api/employees/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "loginId":   "DSUAD202601",
+  "password":   "AdminPassword@123"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

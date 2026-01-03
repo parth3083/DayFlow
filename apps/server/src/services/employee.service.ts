@@ -155,7 +155,6 @@ export class EmployeeService {
 
     // Generate tokens
     const tokens = AuthUtils.generateTokens({
-      employeeId: employee._id.toString(),
       email: employee.email,
       loginId: employee.loginId,
       role: employee.role,
@@ -175,10 +174,10 @@ export class EmployeeService {
    * Change employee password
    */
   static async changePassword(
-    employeeId: string,
+    loginId: string,
     data: ChangePasswordInput
   ): Promise<void> {
-    const employee = await Employee.findById(employeeId).select("+password");
+    const employee = await Employee.findOne({ loginId }).select("+password");
 
     if (!employee) {
       throw new NotFoundError("Employee not found");
@@ -222,7 +221,7 @@ export class EmployeeService {
 
       // Verify the employee still exists and is active
       const payload = AuthUtils.verifyRefreshToken(refreshToken);
-      const employee = await Employee.findById(payload.employeeId);
+      const employee = await Employee.findOne({ loginId: payload.loginId });
 
       if (!employee || !employee.isActive) {
         throw new UnauthorizedError("Employee account is no longer active");
@@ -238,10 +237,12 @@ export class EmployeeService {
   }
 
   /**
-   * Get employee by ID
+   * Get employee by login ID
    */
-  static async getEmployeeById(employeeId: string): Promise<IEmployee> {
-    const employee = await Employee.findById(employeeId);
+  static async getEmployeeByLoginId(loginId: string): Promise<IEmployee> {
+    const employee = await Employee.findOne({ loginId }).select(
+      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+    );
 
     if (!employee) {
       throw new NotFoundError("Employee not found");
@@ -253,21 +254,23 @@ export class EmployeeService {
   /**
    * Get employee profile (current logged-in user)
    */
-  static async getProfile(employeeId: string): Promise<IEmployee> {
-    return this.getEmployeeById(employeeId);
+  static async getProfile(loginId: string): Promise<IEmployee> {
+    return this.getEmployeeByLoginId(loginId);
   }
 
   /**
    * Update employee profile
    */
   static async updateProfile(
-    employeeId: string,
+    loginId: string,
     data: UpdateEmployeeInput
   ): Promise<IEmployee> {
-    const employee = await Employee.findByIdAndUpdate(
-      employeeId,
+    const employee = await Employee.findOneAndUpdate(
+      { loginId },
       { $set: data },
       { new: true, runValidators: true }
+    ).select(
+      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
     );
 
     if (!employee) {
@@ -282,17 +285,19 @@ export class EmployeeService {
    */
   static async updateRole(
     data: UpdateRoleInput,
-    adminId: string
+    adminLoginId: string
   ): Promise<IEmployee> {
     // Prevent self role update
-    if (data.employeeId === adminId) {
+    if (data.loginId === adminLoginId) {
       throw new BadRequestError("You cannot change your own role");
     }
 
-    const employee = await Employee.findByIdAndUpdate(
-      data.employeeId,
+    const employee = await Employee.findOneAndUpdate(
+      { loginId: data.loginId },
       { $set: { role: data.role } },
       { new: true, runValidators: true }
+    ).select(
+      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
     );
 
     if (!employee) {
@@ -306,16 +311,16 @@ export class EmployeeService {
    * Deactivate an employee (Admin or HR only)
    */
   static async deactivateEmployee(
-    employeeId: string,
-    deactivatorId: string,
+    loginId: string,
+    deactivatorLoginId: string,
     deactivatorRole: EmployeeRole
   ): Promise<IEmployee> {
     // Prevent self deactivation
-    if (employeeId === deactivatorId) {
+    if (loginId === deactivatorLoginId) {
       throw new BadRequestError("You cannot deactivate your own account");
     }
 
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findOne({ loginId });
 
     if (!employee) {
       throw new NotFoundError("Employee not found");
@@ -338,10 +343,10 @@ export class EmployeeService {
    * Activate an employee (Admin or HR only)
    */
   static async activateEmployee(
-    employeeId: string,
+    loginId: string,
     activatorRole: EmployeeRole
   ): Promise<IEmployee> {
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findOne({ loginId });
 
     if (!employee) {
       throw new NotFoundError("Employee not found");
@@ -387,7 +392,13 @@ export class EmployeeService {
     const skip = (page - 1) * limit;
 
     const [employees, total] = await Promise.all([
-      Employee.find(query).skip(skip).limit(limit).sort({ createdAt: -1 }),
+      Employee.find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .select(
+          "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+        ),
       Employee.countDocuments(query),
     ]);
 
@@ -398,10 +409,10 @@ export class EmployeeService {
    * Reset employee password (Admin or HR only)
    */
   static async resetPassword(
-    employeeId: string,
+    loginId: string,
     resetterRole: EmployeeRole
   ): Promise<{ newPassword: string }> {
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findOne({ loginId });
 
     if (!employee) {
       throw new NotFoundError("Employee not found");
@@ -446,7 +457,13 @@ export class EmployeeService {
     const skip = (page - 1) * limit;
 
     const [employees, total] = await Promise.all([
-      Employee.find(query).skip(skip).limit(limit).sort({ createdAt: -1 }),
+      Employee.find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .select(
+          "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+        ),
       Employee.countDocuments(query),
     ]);
 

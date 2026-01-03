@@ -6,7 +6,6 @@ import { EmployeeRole } from "../validations/employee.validation.js";
  * JWT Payload Interface
  */
 export interface JWTPayload {
-  employeeId: string;
   email: string;
   loginId: string;
   role: EmployeeRole;
@@ -248,7 +247,6 @@ export class AuthUtils {
 
     // Generate new tokens with fresh payload (excluding old iat/exp)
     return this.generateTokens({
-      employeeId: payload.employeeId,
       email: payload.email,
       loginId: payload.loginId,
       role: payload.role,

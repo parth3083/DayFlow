@@ -1,11 +1,11 @@
 meta {
-  name: Create employee
+  name: Update employee role
   type: http
-  seq: 1
+  seq: 13
 }
 
-post {
-  url: {{Server}}/api/employees
+patch {
+  url: {{Server}}/api/employees/GJODE202603/role
   body: json
   auth: inherit
 }
@@ -16,13 +16,7 @@ headers {
 
 body:json {
   {
-    "companyName": "Google",
-    "firstName": "Johnny",
-    "lastName": "Dept",
-    "email": "john.dept@example.com",
-    "phoneNumber": "+1234567890",
-    "imageUrl": "https://example.com/photo.jpg",
-    "role": "employee"
+    "role":"hr"
   }
 }
 

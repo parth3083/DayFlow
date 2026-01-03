@@ -48,19 +48,22 @@ export class EmployeeController {
       const data: LoginEmployeeInput = req.body;
 
       const result = await EmployeeService.login(data);
+      res.cookie(result.tokens.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
 
-      res.status(HttpStatus.OK).json(
-        ResponseHelper.success(
-          result.isPasswordChanged
-            ? "Login successful"
-            : "Login successful. Please change your password.",
-          {
-            employee: result.employee,
-            tokens: result.tokens,
-            passwordChangeRequired: !result.isPasswordChanged,
-          }
-        )
-      );
+      res
+        .status(HttpStatus.OK)
+        .json(
+          ResponseHelper.success(
+            result.isPasswordChanged
+              ? "Login successful"
+              : "Login successful. Please change your password."
+          )
+        );
     }
   );
 
@@ -72,9 +75,9 @@ export class EmployeeController {
   static changePassword = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const data: ChangePasswordInput = req.body;
-      const employeeId = req.user!.employeeId;
+      const loginId = req.user!.loginId;
 
-      await EmployeeService.changePassword(employeeId, data);
+      await EmployeeService.changePassword(loginId, data);
 
       res
         .status(HttpStatus.OK)
@@ -115,9 +118,9 @@ export class EmployeeController {
    */
   static getProfile = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const employeeId = req.user!.employeeId;
+      const loginId = req.user!.loginId;
 
-      const employee = await EmployeeService.getProfile(employeeId);
+      const employee = await EmployeeService.getProfile(loginId);
 
       res
         .status(HttpStatus.OK)
@@ -134,10 +137,10 @@ export class EmployeeController {
    */
   static updateProfile = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const employeeId = req.user!.employeeId;
+      const loginId = req.user!.loginId;
       const data: UpdateEmployeeInput = req.body;
 
-      const employee = await EmployeeService.updateProfile(employeeId, data);
+      const employee = await EmployeeService.updateProfile(loginId, data);
 
       res
         .status(HttpStatus.OK)
@@ -154,10 +157,10 @@ export class EmployeeController {
    */
   static getEmployeeById = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { id } = req.params;
+      const { loginId } = req.params;
 
-      if (id) {
-        const employee = await EmployeeService.getEmployeeById(id);
+      if (loginId) {
+        const employee = await EmployeeService.getEmployeeByLoginId(loginId);
 
         res.status(HttpStatus.OK).json(
           ResponseHelper.success("Employee retrieved successfully", {
@@ -220,20 +223,20 @@ export class EmployeeController {
    */
   static updateRole = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { id } = req.params;
+      const { loginId } = req.params;
       const { role } = req.body;
-      const adminId = req.user!.employeeId;
+      const adminLoginId = req.user!.loginId;
 
-      if (!id) {
+      if (!loginId) {
         res
           .status(HttpStatus.BAD_REQUEST)
-          .json(ResponseHelper.error("Employee ID is required"));
+          .json(ResponseHelper.error("Login ID is required"));
         return;
       }
 
-      const data: UpdateRoleInput = { employeeId: id, role };
+      const data: UpdateRoleInput = { loginId, role };
 
-      const employee = await EmployeeService.updateRole(data, adminId);
+      const employee = await EmployeeService.updateRole(data, adminLoginId);
 
       res
         .status(HttpStatus.OK)
@@ -250,20 +253,20 @@ export class EmployeeController {
    */
   static deactivateEmployee = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { id } = req.params;
-      const deactivatorId = req.user!.employeeId;
+      const { loginId } = req.params;
+      const deactivatorLoginId = req.user!.loginId;
       const deactivatorRole = req.user!.role;
 
-      if (!id) {
+      if (!loginId) {
         res
           .status(HttpStatus.BAD_REQUEST)
-          .json(ResponseHelper.error("Employee ID is required"));
+          .json(ResponseHelper.error("Login ID is required"));
         return;
       }
 
       const employee = await EmployeeService.deactivateEmployee(
-        id,
-        deactivatorId,
+        loginId,
+        deactivatorLoginId,
         deactivatorRole
       );
 
@@ -282,18 +285,18 @@ export class EmployeeController {
    */
   static activateEmployee = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { id } = req.params;
+      const { loginId } = req.params;
       const activatorRole = req.user!.role;
 
-      if (!id) {
+      if (!loginId) {
         res
           .status(HttpStatus.BAD_REQUEST)
-          .json(ResponseHelper.error("Employee ID is required"));
+          .json(ResponseHelper.error("Login ID is required"));
         return;
       }
 
       const employee = await EmployeeService.activateEmployee(
-        id,
+        loginId,
         activatorRole
       );
 
@@ -312,18 +315,18 @@ export class EmployeeController {
    */
   static resetPassword = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { id } = req.params;
+      const { loginId } = req.params;
       const resetterRole = req.user!.role;
 
-      if (!id) {
+      if (!loginId) {
         res
           .status(HttpStatus.BAD_REQUEST)
-          .json(ResponseHelper.error("Employee ID is required"));
+          .json(ResponseHelper.error("Login ID is required"));
         return;
       }
 
       const { newPassword } = await EmployeeService.resetPassword(
-        id,
+        loginId,
         resetterRole
       );
 

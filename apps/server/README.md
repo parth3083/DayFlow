@@ -162,24 +162,6 @@ POST /api/employees/login
 {
   "success": true,
   "message": "Login successful. Please change your password.",
-  "data": {
-    "employee": {
-      "_id": "...",
-      "companyName": "Tech Solutions Inc",
-      "firstName": "John",
-      "lastName": "Doe",
-      "email": "john.doe@example.com",
-      "loginId": "TSIJODO202601",
-      "role": "employee",
-      "isPasswordChanged": false
-    },
-    "tokens": {
-      "accessToken": "eyJhbG...",
-      "refreshToken": "eyJhbG...",
-      "expiresIn": 900
-    },
-    "passwordChangeRequired": true
-  }
 }
 ```
 
@@ -304,7 +286,7 @@ GET /api/employees?page=1&limit=10&role=employee&isActive=true
 GET /api/employees/search?q=john&page=1&limit=10
 ```
 
-#### Get Employee by ID
+#### Get Employee by ID (loginId)
 ```http
 GET /api/employees/:id
 ```
