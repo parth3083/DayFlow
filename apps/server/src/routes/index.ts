@@ -1,6 +1,8 @@
 import type { Router } from "express";
 import express from "express";
 import employeeRoutes from "./employee.routes.js";
+import attendanceRoutes from "./attendance.routes.js";
+import adminAttendanceRoutes from "./admin.attendance.routes.js";
 import leaveRoutes from "./leave.routes.js";
 
 const router: Router = express.Router();
@@ -12,6 +14,8 @@ const router: Router = express.Router();
 
 // Employee routes
 router.use("/employees", employeeRoutes);
+router.use("/attendance", attendanceRoutes);
+router.use("/admin/attendance", adminAttendanceRoutes);
 
 // Leave & Time-off routes
 router.use("/leaves", leaveRoutes);

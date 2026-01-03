@@ -46,7 +46,7 @@ export const authenticate = async (
       if (error instanceof Error) {
         res
           .status(HttpStatus.UNAUTHORIZED)
-          .json(ResponseHelper.error(error.message));
+          .json(ResponseHelper.error("hey"));
         return;
       }
       throw error;
