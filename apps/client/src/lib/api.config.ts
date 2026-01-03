@@ -4,7 +4,7 @@ import type { ApiResponse, RefreshTokenResponse } from '@/types/auth.types';
 
 // Create axios instance with base configuration
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api`,
   headers: {
     'Content-Type': 'application/json',
   },

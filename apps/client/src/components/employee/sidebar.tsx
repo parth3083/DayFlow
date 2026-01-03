@@ -13,7 +13,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { logoutUser } from "@/redux/slices/authSlice";
+import { fetchMyAttendance } from "@/redux/slices/attendanceSlice";
+import { fetchMyLeaves } from "@/redux/slices/leaveSlice";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { LeaveStatus } from "@/services/leave.service";
 
 const navigation = [
     { name: "Dashboard", href: "/employee/dashboard", icon: LayoutDashboard },
@@ -27,6 +31,38 @@ export default function EmployeeSidebar() {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { user } = useAppSelector((state) => state.auth);
+    const { todayRecord } = useAppSelector((state) => state.attendance);
+    const { myLeaves } = useAppSelector((state) => state.leave);
+
+    useEffect(() => {
+        if (user) {
+            dispatch(fetchMyAttendance({ page: 1, limit: 1 }));
+            dispatch(fetchMyLeaves());
+        }
+    }, [dispatch, user]);
+
+    const getStatus = () => {
+        const today = new Date().toISOString().split('T')[0];
+
+        // Check for leave
+        const isOnLeave = myLeaves.some(l =>
+            l.status === LeaveStatus.APPROVED &&
+            today >= l.startDate.split('T')[0] &&
+            today <= l.endDate.split('T')[0]
+        );
+        if (isOnLeave) return "red";
+
+        // Check for attendance
+        if (todayRecord && !todayRecord.checkOut) return "green";
+
+        return "yellow";
+    };
+
+    const statusColor = {
+        green: "bg-green-500",
+        yellow: "bg-yellow-500",
+        red: "bg-red-500"
+    }[getStatus()];
 
     const handleLogout = async () => {
         await dispatch(logoutUser());
@@ -69,10 +105,13 @@ export default function EmployeeSidebar() {
             {/* User Profile Section */}
             <div className="p-4 border-t border-gray-800">
                 <div className="flex items-center gap-3 mb-3">
-                    <Avatar>
-                        <AvatarImage src={user?.imageUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael"} />
-                        <AvatarFallback>{initials}</AvatarFallback>
-                    </Avatar>
+                    <div className="relative">
+                        <Avatar>
+                            <AvatarImage src={user?.imageUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael"} />
+                            <AvatarFallback>{initials}</AvatarFallback>
+                        </Avatar>
+                        <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-900 ${statusColor}`} />
+                    </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{fullName}</p>
                         <p className="text-xs text-gray-400 truncate capitalize">{user?.role || "Employee"}</p>

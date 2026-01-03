@@ -31,10 +31,10 @@ export class LeaveController {
         throw new NotFoundError("Employee not found");
       }
 
-      await LeaveService.applyLeave(employee._id, data);
+      const leave = await LeaveService.applyLeave(employee._id, data);
 
       res.status(HttpStatus.CREATED).json(
-        ResponseHelper.success("Leave application submitted successfully")
+        ResponseHelper.success("Leave application submitted successfully", leave)
       );
     }
   );
@@ -162,7 +162,7 @@ export class LeaveController {
         .json(
           ResponseHelper.success(
             `Leave request has been ${data.status} successfully`,
-            { leave }
+            leave
           )
         );
     }

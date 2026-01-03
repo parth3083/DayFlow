@@ -41,6 +41,9 @@ export default function EditEmployeeDialog({
         phoneNumber: employee.phoneNumber,
         department: employee.department,
         position: employee.position,
+        joiningDate: employee.joiningDate ? new Date(employee.joiningDate).toISOString().split('T')[0] : "",
+        employmentType: employee.employmentType || "full-time",
+        location: employee.location || "",
     });
 
     useEffect(() => {
@@ -51,6 +54,9 @@ export default function EditEmployeeDialog({
             phoneNumber: employee.phoneNumber,
             department: employee.department,
             position: employee.position,
+            joiningDate: employee.joiningDate ? new Date(employee.joiningDate).toISOString().split('T')[0] : "",
+            employmentType: employee.employmentType || "full-time",
+            location: employee.location || "",
         });
     }, [employee]);
 
@@ -132,30 +138,95 @@ export default function EditEmployeeDialog({
                                     />
                                 </div>
                             </div>
+
+                            <div className="pt-4 border-t">
+                                <h3 className="text-sm font-semibold text-gray-900 mb-4">Company Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="joiningDate">Joining Date</Label>
+                                        <Input
+                                            id="joiningDate"
+                                            type="date"
+                                            value={formData.joiningDate}
+                                            onChange={(e) => setFormData({ ...formData, joiningDate: e.target.value })}
+                                            disabled={loading}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="employmentType">Employment Type</Label>
+                                        <select
+                                            id="employmentType"
+                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            value={formData.employmentType}
+                                            onChange={(e) => setFormData({ ...formData, employmentType: e.target.value as any })}
+                                            disabled={loading}
+                                        >
+                                            <option value="full-time">Full-time</option>
+                                            <option value="part-time">Part-time</option>
+                                            <option value="contract">Contract</option>
+                                            <option value="internship">Internship</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 mt-4">
+                                    <Label htmlFor="location">Work Location</Label>
+                                    <Input
+                                        id="location"
+                                        value={formData.location}
+                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                        placeholder="Remote / New York Office"
+                                        disabled={loading}
+                                    />
+                                </div>
+                            </div>
                         </>
                     )}
 
                     {!isAdmin && (
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="firstName">First Name</Label>
-                                <Input
-                                    id="firstName"
-                                    value={formData.firstName}
-                                    readOnly
-                                    className="bg-gray-50"
-                                />
+                        <>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="firstName">First Name</Label>
+                                    <Input
+                                        id="firstName"
+                                        value={formData.firstName}
+                                        readOnly
+                                        className="bg-gray-50"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="lastName">Last Name</Label>
+                                    <Input
+                                        id="lastName"
+                                        value={formData.lastName}
+                                        readOnly
+                                        className="bg-gray-50"
+                                    />
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="lastName">Last Name</Label>
-                                <Input
-                                    id="lastName"
-                                    value={formData.lastName}
-                                    readOnly
-                                    className="bg-gray-50"
-                                />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="department">Department</Label>
+                                    <Input
+                                        id="department"
+                                        value={formData.department}
+                                        readOnly
+                                        className="bg-gray-50"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="position">Position</Label>
+                                    <Input
+                                        id="position"
+                                        value={formData.position}
+                                        readOnly
+                                        className="bg-gray-50"
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
                     <div className="space-y-2">
@@ -197,6 +268,6 @@ export default function EditEmployeeDialog({
                     </div>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }

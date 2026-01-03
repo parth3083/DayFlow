@@ -64,8 +64,8 @@ export class EmployeeService {
       throw new ConflictError("An employee with this email already exists");
     }
 
-    // Get current year and next serial number
-    const joiningYear = AuthUtils.getCurrentYear();
+    // Get joining year from provided joining date
+    const joiningYear = new Date(data.joiningDate).getFullYear();
     const serialNumber = await Employee.getNextSerialNumber(joiningYear);
 
     // Generate login ID
@@ -96,6 +96,11 @@ export class EmployeeService {
       lastName: data.lastName,
       email: data.email,
       phoneNumber: data.phoneNumber,
+      department: data.department,
+      position: data.position,
+      joiningDate: new Date(data.joiningDate),
+      employmentType: data.employmentType,
+      location: data.location,
       ...(data.imageUrl && { imageUrl: data.imageUrl }),
       password: hashedPassword,
       loginId,
@@ -241,7 +246,7 @@ export class EmployeeService {
    */
   static async getEmployeeByLoginId(loginId: string): Promise<IEmployee> {
     const employee = await Employee.findOne({ loginId }).select(
-      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged department position joiningDate employmentType location imageUrl companyName"
     );
 
     if (!employee) {
@@ -270,7 +275,7 @@ export class EmployeeService {
       { $set: data },
       { new: true, runValidators: true }
     ).select(
-      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged department position joiningDate employmentType location imageUrl companyName"
     );
 
     if (!employee) {
@@ -297,7 +302,7 @@ export class EmployeeService {
       { $set: { role: data.role } },
       { new: true, runValidators: true }
     ).select(
-      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+      "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged department position joiningDate employmentType location imageUrl companyName"
     );
 
     if (!employee) {
@@ -397,7 +402,7 @@ export class EmployeeService {
         .limit(limit)
         .sort({ createdAt: -1 })
         .select(
-          "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+          "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged department position joiningDate employmentType location imageUrl companyName"
         ),
       Employee.countDocuments(query),
     ]);
@@ -462,7 +467,7 @@ export class EmployeeService {
         .limit(limit)
         .sort({ createdAt: -1 })
         .select(
-          "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged"
+          "firstName lastName email phoneNumber loginId role joiningYear isActive serialNumber isPasswordChanged department position joiningDate employmentType location imageUrl companyName"
         ),
       Employee.countDocuments(query),
     ]);

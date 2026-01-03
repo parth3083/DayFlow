@@ -38,6 +38,9 @@ export default function AddEmployeeDialog({
         position: "",
         role: "employee" as const,
         companyName: "",
+        joiningDate: new Date().toISOString().split('T')[0],
+        employmentType: "full-time",
+        location: "",
     });
 
     const [successData, setSuccessData] = useState<{
@@ -78,6 +81,9 @@ export default function AddEmployeeDialog({
                 position: "",
                 role: "employee",
                 companyName: user?.companyName || "",
+                joiningDate: new Date().toISOString().split('T')[0],
+                employmentType: "full-time",
+                location: "",
             });
             onAdd(result.payload.data?.employee);
         }
@@ -228,6 +234,53 @@ export default function AddEmployeeDialog({
                                 value={formData.position}
                                 onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                                 placeholder="Software Developer"
+                                disabled={loading}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Company Info Section */}
+                    <div className="pt-4 border-t">
+                        <h3 className="text-sm font-semibold text-gray-900 mb-4">Company Information</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="joiningDate">Joining Date *</Label>
+                                <Input
+                                    id="joiningDate"
+                                    type="date"
+                                    required
+                                    value={formData.joiningDate}
+                                    onChange={(e) => setFormData({ ...formData, joiningDate: e.target.value })}
+                                    disabled={loading}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="employmentType">Employment Type *</Label>
+                                <select
+                                    id="employmentType"
+                                    required
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    value={formData.employmentType}
+                                    onChange={(e) => setFormData({ ...formData, employmentType: e.target.value })}
+                                    disabled={loading}
+                                >
+                                    <option value="full-time">Full-time</option>
+                                    <option value="part-time">Part-time</option>
+                                    <option value="contract">Contract</option>
+                                    <option value="internship">Internship</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2 mt-4">
+                            <Label htmlFor="location">Work Location *</Label>
+                            <Input
+                                id="location"
+                                required
+                                value={formData.location}
+                                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                placeholder="Remote / New York Office"
                                 disabled={loading}
                             />
                         </div>

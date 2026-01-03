@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import { EmployeeRole } from "../validations/employee.validation.js";
+import { EmployeeRole, EmploymentType } from "../validations/employee.validation.js";
 
 /**
  * Interface for Employee Document
@@ -13,6 +13,9 @@ export interface IEmployee extends Document {
   phoneNumber: string;
   department: string;
   position: string;
+  joiningDate: Date;
+  employmentType: EmploymentType;
+  location: string;
   imageUrl?: string;
   password: string;
   loginId: string;
@@ -80,6 +83,20 @@ const employeeSchema = new Schema<IEmployee, IEmployeeModel>(
     position: {
       type: String,
       // required: [true, "Position is required"],
+      trim: true,
+    },
+    joiningDate: {
+      type: Date,
+      required: [true, "Joining date is required"],
+    },
+    employmentType: {
+      type: String,
+      enum: Object.values(EmploymentType),
+      default: EmploymentType.FULL_TIME,
+    },
+    location: {
+      type: String,
+      required: [true, "Location is required"],
       trim: true,
     },
     imageUrl: {

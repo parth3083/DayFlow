@@ -15,7 +15,7 @@ import type {
  * Handles all authentication-related API calls
  */
 class AuthService {
-  private readonly BASE_PATH = '/api/employees';
+  private readonly BASE_PATH = '/employees';
 
   /**
    * Login with email or loginId and password

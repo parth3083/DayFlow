@@ -18,107 +18,85 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { LeaveType } from "@/services/leave.service";
+import { Loader2 } from "lucide-react";
 
 interface LeaveRequestDialogProps {
     open: boolean;
+    loading?: boolean;
     onOpenChange: (open: boolean) => void;
     onSubmit: (request: {
         leaveType: string;
-        leaveDuration: string;
         startDate: string;
         endDate: string;
-        reason: string;
+        remarks: string;
     }) => void;
 }
 
 export default function LeaveRequestDialog({
     open,
+    loading,
     onOpenChange,
     onSubmit,
 }: LeaveRequestDialogProps) {
     const [formData, setFormData] = useState({
-        leaveType: "",
-        leaveDuration: "full",
+        leaveType: LeaveType.PAID,
         startDate: "",
         endDate: "",
-        reason: "",
+        remarks: "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData);
-        setFormData({
-            leaveType: "",
-            leaveDuration: "full",
-            startDate: "",
-            endDate: "",
-            reason: "",
-        });
-        onOpenChange(false);
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] border-none shadow-2xl rounded-3xl">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold">Apply for Leave</DialogTitle>
+                    <DialogTitle className="text-2xl font-black text-gray-900 tracking-tight">Apply for Leave</DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                <form onSubmit={handleSubmit} className="space-y-6 py-4">
                     <div className="space-y-2">
-                        <Label htmlFor="leaveType">Leave Type *</Label>
+                        <Label htmlFor="leaveType" className="text-xs font-black uppercase tracking-widest text-gray-400">Leave Type *</Label>
                         <Select
                             value={formData.leaveType}
-                            onValueChange={(value) => setFormData({ ...formData, leaveType: value })}
+                            onValueChange={(value) => setFormData({ ...formData, leaveType: value as LeaveType })}
                             required
                         >
-                            <SelectTrigger>
+                            <SelectTrigger className="h-12 rounded-xl border-gray-100 bg-gray-50/50 focus:ring-teal-500/20 font-bold">
                                 <SelectValue placeholder="Select leave type" />
                             </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Paid Leave">Paid Leave</SelectItem>
-                                <SelectItem value="Sick Leave">Sick Leave</SelectItem>
-                                <SelectItem value="Casual Leave">Casual Leave</SelectItem>
-                                <SelectItem value="Unpaid Leave">Unpaid Leave</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="leaveDuration">Leave Duration *</Label>
-                        <Select
-                            value={formData.leaveDuration}
-                            onValueChange={(value) => setFormData({ ...formData, leaveDuration: value })}
-                            required
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select duration" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="full">Full Day</SelectItem>
-                                <SelectItem value="half">Half Day</SelectItem>
+                            <SelectContent className="rounded-xl border-gray-100 shadow-xl">
+                                <SelectItem value={LeaveType.PAID}>Paid Leave</SelectItem>
+                                <SelectItem value={LeaveType.SICK}>Sick Leave</SelectItem>
+                                <SelectItem value={LeaveType.UNPAID}>Unpaid Leave</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="startDate">Start Date *</Label>
+                            <Label htmlFor="startDate" className="text-xs font-black uppercase tracking-widest text-gray-400">Start Date *</Label>
                             <Input
                                 id="startDate"
                                 type="date"
                                 required
+                                className="h-12 rounded-xl border-gray-100 bg-gray-50/50 focus:ring-teal-500/20 font-bold"
                                 value={formData.startDate}
                                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="endDate">End Date *</Label>
+                            <Label htmlFor="endDate" className="text-xs font-black uppercase tracking-widest text-gray-400">End Date *</Label>
                             <Input
                                 id="endDate"
                                 type="date"
                                 required
+                                className="h-12 rounded-xl border-gray-100 bg-gray-50/50 focus:ring-teal-500/20 font-bold"
                                 value={formData.endDate}
                                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                             />
@@ -126,26 +104,33 @@ export default function LeaveRequestDialog({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="reason">Reason *</Label>
+                        <Label htmlFor="remarks" className="text-xs font-black uppercase tracking-widest text-gray-400">Remarks *</Label>
                         <Textarea
-                            id="reason"
+                            id="remarks"
                             required
-                            value={formData.reason}
-                            onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                            placeholder="Please provide a reason for your leave request..."
-                            className="min-h-[100px] resize-none"
+                            value={formData.remarks}
+                            onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
+                            placeholder="Please provide a brief reason or remarks for your request..."
+                            className="min-h-[120px] rounded-2xl border-gray-100 bg-gray-50/50 focus:ring-teal-500/20 font-medium p-4"
                         />
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4 border-t">
+                    <div className="flex justify-end gap-3 pt-6 border-t border-gray-50">
                         <Button
                             type="button"
-                            variant="outline"
+                            variant="ghost"
+                            className="rounded-xl font-bold text-gray-500 hover:text-gray-900"
                             onClick={() => onOpenChange(false)}
+                            disabled={loading}
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" className="bg-teal-600 hover:bg-teal-700">
+                        <Button
+                            type="submit"
+                            className="bg-teal-600 hover:bg-teal-700 rounded-xl font-bold px-8 shadow-lg shadow-teal-500/20 transition-transform active:scale-95"
+                            disabled={loading}
+                        >
+                            {loading ? <Loader2 className="animate-spin mr-2" size={18} /> : null}
                             Submit Request
                         </Button>
                     </div>

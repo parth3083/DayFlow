@@ -88,6 +88,7 @@ const leaveSchema = new Schema<ILeave>(
           attachment: ret.attachment,
           status: ret.status,
           leaveId: ret._id,
+          createdAt: ret.createdAt,
         };
       },
     },

@@ -26,6 +26,9 @@ export interface User {
   position: string;
   joiningYear: number;
   serialNumber: number;
+  joiningDate: string;
+  employmentType: 'full-time' | 'part-time' | 'contract' | 'internship';
+  location: string;
   imageUrl?: string;
   isActive: boolean;
   passwordChangeRequired: boolean;
@@ -81,9 +84,14 @@ export interface CreateEmployeeRequest {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   imageUrl?: string;
   role: 'employee' | 'hr' | 'admin';
+  department: string;
+  position: string;
+  joiningDate: string;
+  employmentType: string;
+  location: string;
 }
 
 // Create employee response
@@ -99,4 +107,9 @@ export interface UpdateProfileRequest {
   lastName?: string;
   phoneNumber?: string;
   imageUrl?: string;
+  department?: string;
+  position?: string;
+  joiningDate?: string;
+  employmentType?: string;
+  location?: string;
 }

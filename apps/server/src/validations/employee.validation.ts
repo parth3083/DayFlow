@@ -10,6 +10,16 @@ export enum EmployeeRole {
 }
 
 /**
+ * Employment type enum
+ */
+export enum EmploymentType {
+  FULL_TIME = "full-time",
+  PART_TIME = "part-time",
+  CONTRACT = "contract",
+  INTERNSHIP = "internship",
+}
+
+/**
  * Validation schema for creating a new employee
  * Used when HR or Admin creates a new employee
  */
@@ -61,6 +71,19 @@ export const createEmployeeSchema = z.object({
       message: "Role must be one of: employee, hr, admin",
     })
     .default(EmployeeRole.EMPLOYEE),
+
+  joiningDate: z.string("Joining date is required").or(z.date()),
+
+  employmentType: z
+    .nativeEnum(EmploymentType, {
+      message: "Employment type must be one of: full-time, part-time, contract, internship",
+    })
+    .default(EmploymentType.FULL_TIME),
+
+  location: z
+    .string("Location is required")
+    .min(2, "Location must be at least 2 characters")
+    .trim(),
 });
 
 /**
@@ -153,6 +176,12 @@ export const updateEmployeeSchema = z.object({
     .min(2, "Position must be at least 2 characters")
     .trim()
     .optional(),
+
+  joiningDate: z.string().or(z.date()).optional(),
+
+  employmentType: z.nativeEnum(EmploymentType).optional(),
+
+  location: z.string().min(2).trim().optional(),
 });
 
 /**
