@@ -121,7 +121,7 @@ export class EmployeeService {
     const query: { email?: string; loginId?: string } = {};
 
     if (data.email) {
-      query.email = data.email;
+      query.email = data.email.toLowerCase();
     } else if (data.loginId) {
       query.loginId = data.loginId.toUpperCase();
     }

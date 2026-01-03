@@ -11,6 +11,9 @@ import {
     LogOut,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { logoutUser } from "@/redux/slices/authSlice";
+import { useRouter } from "next/navigation";
 
 const navigation = [
     { name: "Dashboard", href: "/employee/dashboard", icon: LayoutDashboard },
@@ -21,6 +24,17 @@ const navigation = [
 
 export default function EmployeeSidebar() {
     const pathname = usePathname();
+    const dispatch = useAppDispatch();
+    const router = useRouter();
+    const { user } = useAppSelector((state) => state.auth);
+
+    const handleLogout = async () => {
+        await dispatch(logoutUser());
+        router.push("/auth/signin");
+    };
+
+    const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}` : "MC";
+    const fullName = user ? `${user.firstName} ${user.lastName}` : "Michael Chen";
 
     return (
         <div className="w-64 bg-gray-900 text-white flex flex-col h-screen fixed left-0 top-0">
@@ -56,15 +70,18 @@ export default function EmployeeSidebar() {
             <div className="p-4 border-t border-gray-800">
                 <div className="flex items-center gap-3 mb-3">
                     <Avatar>
-                        <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael" />
-                        <AvatarFallback>MC</AvatarFallback>
+                        <AvatarImage src={user?.imageUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael"} />
+                        <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">Michael Chen</p>
-                        <p className="text-xs text-gray-400 truncate">Employee</p>
+                        <p className="text-sm font-medium truncate">{fullName}</p>
+                        <p className="text-xs text-gray-400 truncate capitalize">{user?.role || "Employee"}</p>
                     </div>
                 </div>
-                <button className="flex items-center gap-2 text-gray-400 hover:text-white text-sm w-full px-2 py-1.5 rounded transition-colors">
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-gray-400 hover:text-white text-sm w-full px-2 py-1.5 rounded transition-colors"
+                >
                     <LogOut size={16} />
                     <span>Sign Out</span>
                 </button>

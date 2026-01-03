@@ -29,7 +29,12 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const token = AuthUtils.extractBearerToken(req.headers.authorization);
+    let token = AuthUtils.extractBearerToken(req.headers.authorization);
+
+    // If no token in header, check cookies
+    if (!token && req.cookies) {
+      token = req.cookies.accessToken;
+    }
 
     if (!token) {
       res
@@ -108,7 +113,11 @@ export const optionalAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const token = AuthUtils.extractBearerToken(req.headers.authorization);
+    let token = AuthUtils.extractBearerToken(req.headers.authorization);
+
+    if (!token && req.cookies) {
+      token = req.cookies.accessToken;
+    }
 
     if (token) {
       try {

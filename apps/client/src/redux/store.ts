@@ -1,15 +1,9 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit"
-
-// Dummy slice to prevent empty reducer error
-const dummySlice = createSlice({
-  name: 'dummy',
-  initialState: {},
-  reducers: {},
-});
+import { configureStore } from "@reduxjs/toolkit"
+import authReducer from "./slices/authSlice"
 
 export const store = configureStore({
   reducer: {
-    dummy: dummySlice.reducer,
+    auth: authReducer,
   },
 })
 

@@ -48,9 +48,9 @@ export class EmployeeController {
       const data: LoginEmployeeInput = req.body;
 
       const result = await EmployeeService.login(data);
-      res.cookie(result.tokens.accessToken, {
+      res.cookie("accessToken", result.tokens.accessToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: 15 * 60 * 1000,
       });
@@ -61,7 +61,8 @@ export class EmployeeController {
           ResponseHelper.success(
             result.isPasswordChanged
               ? "Login successful"
-              : "Login successful. Please change your password."
+              : "Login successful. Please change your password.",
+            result
           )
         );
     }
@@ -383,16 +384,16 @@ export class EmployeeController {
    */
   static logout = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      // For JWT, logout is typically handled client-side by removing tokens
-      // For a more secure implementation, consider using a token blacklist with Redis
+      // Clear the access token cookie
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
 
-      res
-        .status(HttpStatus.OK)
-        .json(
-          ResponseHelper.success(
-            "Logged out successfully. Please remove tokens from client."
-          )
-        );
+      res.status(HttpStatus.OK).json(
+        ResponseHelper.success("Logged out successfully")
+      );
     }
   );
 }

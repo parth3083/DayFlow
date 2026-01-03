@@ -1,6 +1,7 @@
 import express from "express";
 import type { Express, Request, Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import routes from "./routes/index.js";
 import { errorHandler, notFoundHandler } from "./middleware/index.js";
 
@@ -21,6 +22,7 @@ app.use(
 // Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(cookieParser());
 
 // Trust proxy (for rate limiting behind reverse proxy)
 app.set("trust proxy", 1);
