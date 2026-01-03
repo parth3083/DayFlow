@@ -19,4 +19,5 @@ export {
   ConflictError,
   ValidationError,
 } from "./response.utils.js";
+export { ApiError, default as ApiErrorDefault } from "./ApiError.js";
 export type { ApiResponse } from "./response.utils.js";

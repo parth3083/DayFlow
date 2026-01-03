@@ -1,0 +1,25 @@
+meta {
+  name: Get all payslips
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{Server}}/api/payroll/all-payslips?month=1&year=2026
+  body: json
+  auth: inherit
+}
+
+params:query {
+  month: 1
+  year: 2026
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDI4NDM2LCJleHAiOjE3Njc0MjkzMzZ9.fLCPo-CZPxH0bH4zgkDsO38D_WHWHOcfEwGgz-AUzuA
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

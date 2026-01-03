@@ -14,6 +14,8 @@ export interface IAttendance extends Document {
   checkOut?: Date;
   status: AttendanceStatus;
   workHours: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IAttendanceModel extends Model<IAttendance> {}
@@ -47,7 +49,25 @@ const attendanceSchema = new Schema<IAttendance, IAttendanceModel>(
       default: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      versionKey: false,
+      transform: (_, ret) => {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        return ret;
+      },
+    },
+    toObject: {
+      versionKey: false,
+      transform: (_, ret) => {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        return ret;
+      },
+    },
+  }
 );
 
 // Update Index to use loginId

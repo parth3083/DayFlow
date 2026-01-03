@@ -4,6 +4,7 @@ import employeeRoutes from "./employee.routes.js";
 import attendanceRoutes from "./attendance.routes.js";
 import adminAttendanceRoutes from "./admin.attendance.routes.js";
 import leaveRoutes from "./leave.routes.js";
+import payrollRoutes from "./payroll.routes.js";
 
 const router: Router = express.Router();
 
@@ -19,6 +20,9 @@ router.use("/admin/attendance", adminAttendanceRoutes);
 
 // Leave & Time-off routes
 router.use("/leaves", leaveRoutes);
+
+// Payroll routes
+router.use("/payroll", payrollRoutes);
 
 // Health check route
 router.get("/health", (req, res) => {

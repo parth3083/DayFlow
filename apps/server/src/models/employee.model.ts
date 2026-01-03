@@ -20,8 +20,8 @@ export interface IEmployee extends Document {
   isPasswordChanged: boolean;
   isActive: boolean;
   lastLogin?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 /**
@@ -114,6 +114,22 @@ const employeeSchema = new Schema<IEmployee, IEmployeeModel>(
   },
   {
     timestamps: true,
+    toJSON: {
+      versionKey: false,
+      transform: (_, ret) => {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        return ret;
+      },
+    },
+    toObject: {
+      versionKey: false,
+      transform: (_, ret) => {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        return ret;
+      },
+    },
   }
 );
 

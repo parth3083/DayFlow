@@ -1,0 +1,20 @@
+meta {
+  name: Get all payslips of the USER
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{Server}}/api/payroll/my-payslips
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDI4NDM2LCJleHAiOjE3Njc0MjkzMzZ9.fLCPo-CZPxH0bH4zgkDsO38D_WHWHOcfEwGgz-AUzuA
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Generate Payslip
+  type: http
+  seq: 20
+}
+
+post {
+  url: {{Server}}/api/payroll/generate-payslip
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDI4NDM2LCJleHAiOjE3Njc0MjkzMzZ9.fLCPo-CZPxH0bH4zgkDsO38D_WHWHOcfEwGgz-AUzuA
+}
+
+body:json {
+  {
+    "loginId": "TSIJODO202602",
+    "month": 1,
+    "year": 2026
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

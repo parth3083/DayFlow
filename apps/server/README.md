@@ -24,6 +24,7 @@ A robust, secure, and scalable employee authentication and management system bui
 - ✅ **Password Management** - Force password change on first login, password reset by HR/Admin
 - ✅ **Employee Management** - CRUD operations with role-based permissions
 - ✅ **Leave & Time-Off Management** - Apply, view, and approve leave requests
+- ✅ **Payroll & Salary Management** - Configure salary structures and generate attendance-based payslips
 - ✅ **Rate Limiting** - Protection against brute force attacks
 
 ## 🛠 Technology Stack
@@ -389,6 +390,66 @@ PATCH /api/leaves/:id/status
   "adminComments": "Enjoy your time off!"
 }
 ```
+
+---
+
+### 💰 Payroll & Salary Management Routes (Require Bearer Token)
+
+#### Update Salary Structure (Admin Only)
+```http
+PUT /api/payroll/salary-structure
+```
+
+**Request Body:**
+```json
+{
+  "loginId": "TSIJODO202601",
+  "monthlyWage": 50000,
+  "basicPercentage": 50,
+  "hraPercentageOfBasic": 50,
+  "standardAllowance": 4167,
+  "performanceBonusPercentageOfBasic": 8.33,
+  "ltaPercentageOfBasic": 8.333,
+  "pfRate": 12,
+  "professionalTax": 200
+}
+```
+
+#### Get Salary Structure
+```http
+GET /api/payroll/salary-structure/:loginId
+```
+*Access: Admin, HR, or the employee themselves.*
+
+#### Generate Payslip (Admin Only)
+```http
+POST /api/payroll/generate-payslip
+```
+
+**Request Body:**
+```json
+{
+  "loginId": "TSIJODO202601",
+  "month": 5,
+  "year": 2026
+}
+```
+
+#### Get My Payslips
+```http
+GET /api/payroll/my-payslips
+```
+
+#### Get All Payslips (HR & Admin)
+```http
+GET /api/payroll/all-payslips?month=5&year=2026
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| month | number | Filter by month (1-12) |
+| year | number | Filter by year |
 
 ---
 
