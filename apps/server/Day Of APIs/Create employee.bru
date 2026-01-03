@@ -1,0 +1,28 @@
+meta {
+  name: Create employee
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/employees
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "companyName": "Tech Solutions Inc",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phoneNumber": "+1234567890",
+    "imageUrl": "https://example.com/photo.jpg",
+    "role": "employee"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

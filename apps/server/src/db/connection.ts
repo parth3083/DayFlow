@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { MongoClient } from "mongodb";
+import "dotenv/config"
 
 // Native MongoDB client for better-auth adapter
 const MONGODB_URI = process.env.MONGODB_URI!;
