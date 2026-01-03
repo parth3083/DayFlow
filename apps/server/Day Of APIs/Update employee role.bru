@@ -1,0 +1,26 @@
+meta {
+  name: Update employee role
+  type: http
+  seq: 13
+}
+
+patch {
+  url: {{Server}}/api/employees/GJODE202603/role
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGRheWZsb3cuY29tIiwibG9naW5JZCI6IkRTVUFEMjAyNjAxIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NDIyNzU3LCJleHAiOjE3Njc0MjM2NTd9.oa_eJT1bbxZ-8Ee-icw7w28T0-xgBCd9vmlLnku9e7M
+}
+
+body:json {
+  {
+    "role":"hr"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
